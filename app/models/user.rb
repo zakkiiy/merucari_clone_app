@@ -1,23 +1,24 @@
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise  :database_authenticatable,
-          :registerable,
-          :recoverable,
-          :rememberable,
-          :validatable,
-          :confirmable,
-          :lockable,
-          :timeoutable,
-          :trackable
+  devise :database_authenticatable,
+         :registerable,
+         :recoverable,
+         :rememberable,
+         :validatable,
+         :confirmable,
+         :lockable,
+         :timeoutable,
+         :trackable
 
   validates :nickname, presence: true
   validates :gender, presence: true
+  before_validation :skip_confirmation!, if: :new_record?
+
+  has_one :user_information, dependent: :destroy
 
   enum gender: {
-    unanswered: 0,
-    male: 1,
-    female: 2
+      unanswered: 0,
+      male: 1,
+      female: 2
   }
 
   class << self
